@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/scentpro/public_html/
+    - export DEPLOYPATH=/home4/scenttwm/public_html/
     - /bin/cp -R * $DEPLOYPATH
