@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Scentpro Technology Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f3f0f9', 100: '#e8e1f3', 200: '#d1c3e7', 300: '#b9a5db', 400: '#a287cf', 500: '#8b69c3', 600: '#3a2967', 700: '#2e2152', 800: '#23193e', 900: '#17112a' },
+                        accent: { 50: '#fdf4fe', 100: '#fbe9fd', 200: '#f7d3fb', 300: '#f3bdf9', 400: '#efa7f7', 500: '#eb91f5', 600: '#cc19dc', 700: '#a314b0', 800: '#7a0f84', 900: '#510a58' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="js/cart.js"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="font-sans text-gray-900 bg-gray-50/50 overflow-x-hidden" x-data="{ 
+    orderPlaced: false,
+    formData: {
+        name: '',
+        email: '',
+        phone: '',
+        address: ''
+    },
+    submitOrder() {
+        if ($store.cart.items.length === 0) return;
+        
+        let message = `🛒 *New Order from Scentpro Shop*\n\n`;
+        message += `👤 *Customer Details:*\n`;
+        message += `• Name: ${this.formData.name}\n`;
+        message += `• Phone: ${this.formData.phone}\n`;
+        message += `• Email: ${this.formData.email}\n`;
+        message += `• Address: ${this.formData.address}\n\n`;
+        
+        message += `📦 *Order Items:*\n`;
+        $store.cart.items.forEach(item => {
+            message += `• ${item.name} (x${item.quantity}) - ${item.price}\n`;
+        });
+        
+        message += `\n💰 *Total: $${$store.cart.total.toLocaleString()}*`;
+        
+        const whatsappNumber = '263717262717';
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        
+        this.orderPlaced = true;
+        
+        // Clear cart first
+        $store.cart.clear();
+
+        // Immediate redirect
+        window.location.href = whatsappUrl;
+    }
+}">
+
+    <!-- Simple Header -->
+    <header class="bg-white border-b py-4 md:py-6">
+        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
+            <a href="index.html">
+                <img src="images/Second Concept Logo.png" alt="Scentpro Logo" class="h-10 w-auto">
+            </a>
+            <a href="shop.html"
+                class="text-sm font-semibold text-gray-500 hover:text-brand-600 flex items-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Back to Shop
+            </a>
+        </div>
+    </header>
+
+    <main class="py-8 md:py-20 overflow-x-hidden">
+        <div class="container mx-auto px-4 md:px-6">
+
+            <template x-if="!orderPlaced">
+                <div class="grid lg:grid-cols-2 gap-8 md:gap-12">
+                    <!-- Order Summary -->
+                    <div class="space-y-8">
+                        <div>
+                            <h2 class="text-3xl font-black text-gray-900 mb-6">Order Summary</h2>
+                            <div class="bg-white rounded-2xl shadow-sm border p-6 space-y-6">
+                                <template x-if="$store.cart.items.length === 0">
+                                    <div class="text-center py-8">
+                                        <p class="text-gray-500">Your cart is empty</p>
+                                        <a href="shop.html"
+                                            class="text-brand-600 font-bold hover:underline mt-2 block">Return to
+                                            Shop</a>
+                                    </div>
+                                </template>
+
+                                <div class="divide-y">
+                                    <template x-for="item in $store.cart.items" :key="item.id"
+                                        @x-init="Alpine.nextTick(() => lucide.createIcons())">
+                                        <div class="py-4 flex gap-4 first:pt-0">
+                                            <div
+                                                class="w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0 text-brand-600">
+                                                <i :data-lucide="item.icon || 'package'" class="w-8 h-8"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <h4 class="font-bold text-gray-900 text-sm" x-text="item.name"></h4>
+                                                <p class="text-gray-500 text-xs mt-1" x-text="'Qty: ' + item.quantity">
+                                                </p>
+                                            </div>
+                                            <p class="font-bold text-gray-900" x-text="item.price"></p>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <div class="pt-6 border-t space-y-3">
+                                    <div class="flex justify-between text-gray-600">
+                                        <span>Subtotal</span>
+                                        <span x-text="'$' + $store.cart.total.toLocaleString()"></span>
+                                    </div>
+                                    <div class="flex justify-between text-gray-600">
+                                        <span>Shipping</span>
+                                        <span class="text-green-600 font-medium">Free</span>
+                                    </div>
+                                    <div class="flex justify-between items-center pt-4 border-t">
+                                        <span class="text-xl font-bold text-gray-900">Total</span>
+                                        <span class="text-3xl font-black text-brand-600"
+                                            x-text="'$' + $store.cart.total.toLocaleString()"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trust Badges -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-xl border flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-sm font-bold text-gray-700">Secure Payment</span>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl border flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                    <i data-lucide="truck" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-sm font-bold text-gray-700">Fast Delivery</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Info -->
+                    <div>
+                        <h2 class="text-3xl font-black text-gray-900 mb-6">Shipping Details</h2>
+                        <form @submit.prevent="submitOrder" class="bg-white rounded-2xl shadow-sm border p-8 space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700">Full Name</label>
+                                    <input type="text" x-model="formData.name" required placeholder="John Doe"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-600 transition-all">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-bold text-gray-700">Email Address</label>
+                                    <input type="email" x-model="formData.email" required placeholder="john@example.com"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-600 transition-all">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-700">Phone Number</label>
+                                <input type="tel" x-model="formData.phone" required placeholder="+263 770 000 000"
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-600 transition-all">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-bold text-gray-700">Delivery Address</label>
+                                <textarea x-model="formData.address" required rows="4"
+                                    placeholder="Your full address..."
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-brand-600 transition-all"></textarea>
+                            </div>
+
+                            <button type="submit" :disabled="$store.cart.items.length === 0"
+                                class="w-full py-4 bg-brand-600 text-white rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed">
+                                Complete Order
+                            </button>
+                            <p class="text-center text-sm text-gray-500">By clicking "Complete Order", you agree to our
+                                Terms & Conditions.</p>
+                        </form>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Success Message -->
+            <template x-if="orderPlaced">
+                <div class="max-w-2xl mx-auto text-center py-20 bg-white rounded-3xl shadow-xl border p-12"
+                    data-aos="zoom-in">
+                    <div
+                        class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                        <i data-lucide="check-circle" class="w-12 h-12"></i>
+                    </div>
+                    <h2 class="text-4xl font-black text-gray-900 mb-4">Order Received!</h2>
+                    <p class="text-xl text-gray-600 mb-8">Thank you, <span x-text="formData.name"></span>. We've
+                        received your order and will contact you shortly for delivery arrangements.</p>
+                    <div class="bg-gray-50 rounded-2xl p-6 mb-8 text-left">
+                        <p class="text-sm text-gray-500 mb-2 uppercase tracking-wider font-bold">What happens next?</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="mail" class="w-5 h-5 text-brand-600 mt-0.5"></i>
+                                <span class="text-gray-700">Order confirmation sent to <strong
+                                        x-text="formData.email"></strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="phone" class="w-5 h-5 text-brand-600 mt-0.5"></i>
+                                <span class="text-gray-700">Our sales team will call you to confirm payment</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="package" class="w-5 h-5 text-brand-600 mt-0.5"></i>
+                                <span class="text-gray-700">Equipment will be dispatched for delivery</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="shop.html"
+                        class="inline-block px-10 py-4 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition-all shadow-lg hover:shadow-xl">
+                        Continue Shopping
+                    </a>
+                </div>
+            </template>
+
+        </div>
+    </main>
+
+    <footer class="py-8 md:py-12 border-t mt-12">
+        <div class="container mx-auto px-4 md:px-6 text-center text-gray-500 text-sm">
+            <p>&copy; 2024 Scentpro Technology Solutions. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

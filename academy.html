@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scentpro Academy | Professional Technology Training Zimbabwe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f3f0f9', 100: '#e8e1f3', 200: '#d1c3e7', 300: '#b9a5db', 400: '#a287cf', 500: '#8b69c3', 600: '#3a2967', 700: '#2e2152', 800: '#23193e', 900: '#17112a' },
+                        accent: { 50: '#fdf4fe', 100: '#fbe9fd', 200: '#f7d3fb', 300: '#f3bdf9', 400: '#efa7f7', 500: '#eb91f5', 600: '#cc19dc', 700: '#a314b0', 800: '#7a0f84', 900: '#510a58' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+
+<body class="font-sans text-gray-900 bg-white overflow-x-hidden" x-data="{ mobileMenu: false, scrolled: false }"
+    @scroll.window="scrolled = (window.pageYOffset > 20)">
+    <header class="fixed top-0 w-full z-[100] transition-all duration-300 pointer-events-none">
+        <!-- Main Header with Light Glassmorphism -->
+        <div class="w-full transition-all duration-300"
+            :class="scrolled ? 'bg-brand-900/95 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-5'">
+
+            <div class="container mx-auto px-4 md:px-6 flex justify-between items-center relative pointer-events-auto">
+
+                <!-- Left: Logo -->
+                <a href="index.html" class="flex items-center gap-2 relative z-10">
+                    <img src="images/Second Concept Logo.png" alt="Scentpro Logo"
+                        class="h-5 md:h-10 w-auto object-contain transition-all duration-300 brightness-0 invert">
+                </a>
+
+                <!-- Center: Floating Navigation Pill -->
+                <nav
+                    class="hidden xl:flex items-center gap-1 bg-white border border-gray-200 rounded-full px-2 py-1.5 shadow-sm relative z-10">
+                    <a href="index.html"
+                        class="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-brand-600 hover:bg-gray-50 transition-all">Home</a>
+                    <a href="services.html"
+                        class="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-brand-600 hover:bg-gray-50 transition-all">Services</a>
+                    <a href="starlink.html"
+                        class="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-brand-600 hover:bg-gray-50 transition-all">Starlink</a>
+                    <a href="shop.html"
+                        class="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-brand-600 hover:bg-gray-50 transition-all">Shop</a>
+                    <a href="academy.html"
+                        class="px-4 py-2 rounded-full text-sm font-medium text-brand-600 bg-brand-50 shadow-sm">Academy</a>
+                    <a href="contact.html"
+                        class="px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:text-brand-600 hover:bg-gray-50 transition-all">Contact</a>
+                </nav>
+
+                <!-- Right: CTA & Mobile Toggle -->
+                <div class="flex items-center gap-1.5 md:gap-3 relative z-10">
+                    <a href="starlink.html"
+                        class="hidden md:flex bg-brand-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-700 transition-all items-center gap-2 shadow-sm hover:shadow-md">
+                        Get Starlink
+                    </a>
+
+                    <!-- Cart Icon -->
+                    <button @click="cartOpen = true"
+                        class="relative w-10 h-10 flex items-center justify-center rounded-full text-white hover:bg-white/10 transition-all focus:outline-none">
+                        <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                        <template x-if="$store.cart.count > 0">
+                            <span
+                                class="absolute -top-1 -right-1 bg-accent-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-brand-900"
+                                x-text="$store.cart.count"></span>
+                        </template>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button class="xl:hidden w-10 h-10 flex items-center justify-center rounded-full transition-all"
+                        :class="scrolled ? 'bg-white/10 text-white' : 'bg-brand-600 text-white shadow-md'"
+                        @click="mobileMenu = !mobileMenu">
+                        <i x-show="!mobileMenu" data-lucide="menu" class="w-5 h-5 transition-all"></i>
+                        <i x-show="mobileMenu" data-lucide="x" class="w-5 h-5 transition-all"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenu" x-cloak x-transition
+            class="xl:hidden bg-white border-t border-gray-100 absolute w-full top-full left-0 z-40 shadow-xl p-6 space-y-3 pointer-events-auto">
+            <a href="index.html" class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Home</a>
+            <a href="services.html"
+                class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Services</a>
+            <a href="starlink.html"
+                class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Starlink</a>
+            <a href="shop.html" class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Shop</a>
+            <a href="academy.html"
+                class="block px-4 py-3 rounded-lg bg-brand-50 text-brand-700 font-semibold">Academy</a>
+            <a href="contact.html"
+                class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Contact</a>
+
+            <div class="pt-4 border-t flex items-center justify-between">
+                <button @click="cartOpen = true; mobileMenu = false"
+                    class="flex items-center gap-2 text-gray-700 font-medium">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span>Cart (<span x-text="$store.cart.count"></span>)</span>
+                </button>
+            </div>
+            <a href="starlink.html"
+                class="block w-full py-3 rounded-xl bg-brand-600 text-white font-bold text-center mt-4 shadow-md">
+                Get Starlink
+            </a>
+        </div>
+    </header>
+
+    <main class="overflow-x-hidden">
+        <section class="bg-brand-600 text-white pt-24 pb-16 md:pt-32 md:pb-20">
+            <div class="container mx-auto px-4 md:px-6" data-aos="fade-up">
+                <div class="max-w-4xl mx-auto text-center">
+                    <div
+                        class="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+                        <span class="w-2 h-2 bg-accent-400 rounded-full animate-pulse"></span>Professional Technology
+                        Training
+                    </div>
+                    <h1 class="text-3xl md:text-6xl font-black mb-6 leading-tight">Scentpro Technology Academy</h1>
+                    <p class="text-lg md:text-xl text-brand-100 mb-12">Gain industry-recognized certifications in
+                        networking, fiber
+                        optics, satellite technology, and cybersecurity. Taught by certified professionals.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                        <div class="p-4 bg-brand-700/30 rounded-xl md:bg-transparent md:p-0">
+                            <div class="text-4xl font-black mb-2">1,200+</div>
+                            <div class="text-brand-200 text-sm">Graduates</div>
+                        </div>
+                        <div class="p-4 bg-brand-700/30 rounded-xl md:bg-transparent md:p-0">
+                            <div class="text-4xl font-black mb-2">95%</div>
+                            <div class="text-brand-200 text-sm">Employment Rate</div>
+                        </div>
+                        <div class="p-4 bg-brand-700/30 rounded-xl md:bg-transparent md:p-0">
+                            <div class="text-4xl font-black mb-2">15+</div>
+                            <div class="text-brand-200 text-sm">Courses</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4 md:px-6">
+                <h2 class="text-4xl font-black text-center mb-12" data-aos="fade-up">Professional Certification Courses
+                </h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white border-2 border-gray-100 rounded-xl p-8 hover-lift" data-aos="fade-up">
+                        <div class="w-14 h-14 bg-brand-600 rounded-lg flex items-center justify-center text-white mb-6">
+                            <i data-lucide="cable" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Fiber Optic Technician</h3>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="clock"
+                                    class="w-4 h-4"></i><span class="text-sm">8 weeks | Part-time</span></div>
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="users"
+                                    class="w-4 h-4"></i><span class="text-sm">450+ students enrolled</span></div>
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="award"
+                                    class="w-4 h-4"></i><span class="text-sm">Industry certification</span></div>
+                        </div>
+                        <p class="text-gray-600 mb-6">Learn fiber optic installation, splicing, testing, and
+                            troubleshooting. Hands-on training with industry-standard equipment.</p>
+                        <div class="mb-6">
+                            <div class="text-2xl font-black text-brand-600">$350</div>
+                            <div class="text-sm text-gray-600">Course fee</div>
+                        </div>
+                        <a href="https://wa.me/263717262717?text=Hi Scentpro Academy, I'm interested in enrolling for the Fiber Optic Technician certification course."
+                            target="_blank"
+                            class="block text-center px-6 py-3 bg-brand-600 text-white rounded-lg font-bold hover:bg-brand-700 transition-all">Enroll
+                            Now</a>
+                    </div>
+
+                    <div class="bg-white border-2 border-gray-100 rounded-xl p-8 hover-lift" data-aos="fade-up"
+                        data-aos-delay="100">
+                        <div
+                            class="w-14 h-14 bg-accent-600 rounded-lg flex items-center justify-center text-white mb-6">
+                            <i data-lucide="satellite" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Satellite Communication</h3>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="clock"
+                                    class="w-4 h-4"></i><span class="text-sm">6 weeks | Full-time</span></div>
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="users"
+                                    class="w-4 h-4"></i><span class="text-sm">280+ students enrolled</span></div>
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="award"
+                                    class="w-4 h-4"></i><span class="text-sm">Starlink certified</span></div>
+                        </div>
+                        <p class="text-gray-600 mb-6">Master Starlink and satellite internet installation,
+                            configuration, and maintenance. Become a certified installer.</p>
+                        <div class="mb-6">
+                            <div class="text-2xl font-black text-brand-600">$450</div>
+                            <div class="text-sm text-gray-600">Course fee</div>
+                        </div>
+                        <a href="https://wa.me/263717262717?text=Hi Scentpro Academy, I'm interested in enrolling for the Satellite Communication (Starlink) certification course."
+                            target="_blank"
+                            class="block text-center px-6 py-3 bg-brand-600 text-white rounded-lg font-bold hover:bg-brand-700 transition-all">Enroll
+                            Now</a>
+                    </div>
+
+                    <div class="bg-white border-2 border-gray-100 rounded-xl p-8 hover-lift" data-aos="fade-up"
+                        data-aos-delay="200">
+                        <div class="w-14 h-14 bg-brand-600 rounded-lg flex items-center justify-center text-white mb-6">
+                            <i data-lucide="shield-check" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Network Security</h3>
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="clock"
+                                    class="w-4 h-4"></i><span class="text-sm">10 weeks | Part-time</span></div>
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="users"
+                                    class="w-4 h-4"></i><span class="text-sm">190+ students enrolled</span></div>
+                            <div class="flex items-center gap-2 text-gray-600"><i data-lucide="award"
+                                    class="w-4 h-4"></i><span class="text-sm">Advanced certification</span></div>
+                        </div>
+                        <p class="text-gray-600 mb-6">Advanced training in cybersecurity, firewall configuration,
+                            intrusion detection, and security best practices.</p>
+                        <div class="mb-6">
+                            <div class="text-2xl font-black text-brand-600">$500</div>
+                            <div class="text-sm text-gray-600">Course fee</div>
+                        </div>
+                        <a href="https://wa.me/263717262717?text=Hi Scentpro Academy, I'm interested in enrolling for the Network Security advanced certification course."
+                            target="_blank"
+                            class="block text-center px-6 py-3 bg-brand-600 text-white rounded-lg font-bold hover:bg-brand-700 transition-all">Enroll
+                            Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-black text-center mb-12" data-aos="fade-up">Student Success Stories</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-xl p-8 shadow-sm" data-aos="fade-up">
+                        <div class="flex text-yellow-400 mb-4 gap-1">
+                            <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        </div>
+                        <p class="text-gray-700 mb-6 italic">"Completed the Starlink Installation course in Bulawayo and
+                            got certified. Within 2 weeks, I was handling projects in Waterford. Best career
+                            investment!"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 bg-brand-600 rounded-full flex items-center justify-center text-white font-bold">
+                                TM</div>
+                            <div>
+                                <div class="font-bold">Tatenda Moyo</div>
+                                <div class="text-sm text-gray-600">Starlink Tech, Waterford</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-8 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex text-yellow-400 mb-4 gap-1">
+                            <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        </div>
+                        <p class="text-gray-700 mb-6 italic">"The Starlink training at Napier Office Park is top-notch.
+                            It gave me the confidence to handle complex setups in Thorngrove. Highly professional!"</p>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 bg-accent-600 rounded-full flex items-center justify-center text-white font-bold">
+                                RN</div>
+                            <div>
+                                <div class="font-bold">Rumbi Ncube</div>
+                                <div class="text-sm text-gray-600">Bulawayo Technician, Thorngrove</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl p-8 shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex text-yellow-400 mb-4 gap-1">
+                            <i data-lucide="star" class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star"
+                                class="w-5 h-5 fill-current"></i><i data-lucide="star" class="w-5 h-5 fill-current"></i>
+                        </div>
+                        <p class="text-gray-700 mb-6 italic">"Gained my Starlink certification here and now I'm the
+                            go-to
+                            tech for Rangemore installations. Excellent practical training right here in Bulawayo!"</p>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 bg-brand-600 rounded-full flex items-center justify-center text-white font-bold">
+                                CM</div>
+                            <div>
+                                <div class="font-bold">Chipo Malunga</div>
+                                <div class="text-sm text-gray-600">Satellite Installer, Rangemore</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16 bg-brand-600 text-white">
+            <div class="container mx-auto px-4 md:px-6 text-center" data-aos="zoom-in">
+                <h2 class="text-4xl font-black mb-4">Ready to Start Your Tech Career?</h2>
+                <p class="text-xl text-brand-100 mb-8 max-w-3xl mx-auto">Join hundreds of graduates who have launched
+                    successful careers in technology.</p>
+                <a href="contact.html"
+                    class="inline-flex items-center gap-2 px-10 py-4 bg-white text-brand-600 rounded-lg font-bold hover:bg-gray-50 transition-all">Apply
+                    Now <i data-lucide="arrow-right" class="w-5 h-5"></i></a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 bg-gray-50 border-t">
+        <div class="container mx-auto px-6">
+            <div
+                class="bg-brand-600 rounded-2xl p-8 md:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="text-white max-w-lg">
+                    <h2 class="text-3xl font-black mb-4">Upskill Your Future</h2>
+                    <p class="text-brand-100 italic">Stay updated on new course arrivals, scholarship opportunities, and
+                        tech workshops.</p>
+                </div>
+                <form class="flex flex-col sm:flex-row w-full md:w-auto gap-2"
+                    action="https://formspree.io/f/sales@scentpro.co.zw" method="POST">
+                    <input type="hidden" name="_subject" value="New Newsletter Subscription (Academy Page)">
+                    <input type="email" name="email" placeholder="Your email address" required
+                        class="flex-1 md:w-80 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-400 text-gray-900 leading-none">
+                    <button type="submit"
+                        class="bg-accent-600 hover:bg-accent-700 text-white px-6 py-3 rounded-lg font-bold transition-all sm:whitespace-nowrap">
+                        Keep Me Posted
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-8 overflow-x-hidden">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <img src="images/Second Concept Logo.png" alt="Scentpro Logo"
+                        class="h-14 w-auto object-contain brightness-0 invert mb-6">
+                    <p class="text-gray-400 max-w-md leading-relaxed mb-6">Zimbabwe's leading ICT solutions provider. We
+                        specialize in Starlink installation, enterprise networking, security systems, and professional
+                        technology training.</p>
+                    <div class="flex gap-3">
+                        <a href="https://www.facebook.com/scentpro.co.zw" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-600 transition-all"><i
+                                data-lucide="facebook" class="w-5 h-5"></i></a>
+                        <a href="https://x.com/scentprosales" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-600 transition-all"><i
+                                data-lucide="twitter" class="w-5 h-5"></i></a>
+                        <a href="https://www.linkedin.com/company/framezimbabwe/?viewAsMember=true" target="_blank"
+                            rel="noopener noreferrer"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-600 transition-all"><i
+                                data-lucide="linkedin" class="w-5 h-5"></i></a>
+                        <a href="https://www.instagram.com/scentpro_technology/?__pwa=1#" target="_blank"
+                            rel="noopener noreferrer"
+                            class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-brand-600 transition-all"><i
+                                data-lucide="instagram" class="w-5 h-5"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li><a href="services.html" class="hover:text-white transition-colors">All Services</a></li>
+                        <li><a href="starlink.html" class="hover:text-white transition-colors">Starlink Installation</a>
+                        </li>
+                        <li><a href="academy.html" class="hover:text-white transition-colors">Technology Academy</a>
+                        </li>
+                        <li><a href="shop.html" class="hover:text-white transition-colors">Tech Shop</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg mb-4">Contact</h4>
+                    <ul class="space-y-3 text-gray-400">
+                        <li class="flex items-start gap-2"><i data-lucide="map-pin"
+                                class="w-5 h-5 text-brand-400 flex-shrink-0 mt-0.5"></i><span>1 Napier Ave,
+                                Bulawayo</span>
+                        </li>
+                        <li class="flex items-start gap-2"><i data-lucide="phone"
+                                class="w-5 h-5 text-brand-400 flex-shrink-0 mt-0.5"></i><span>+263 86 7718 6045</span>
+                        </li>
+                        <li class="flex items-start gap-2"><i data-lucide="mail"
+                                class="w-5 h-5 text-brand-400 flex-shrink-0 mt-0.5"></i><span>sales@scentpro.co.zw</span>
+                        </li>
+                        <li class="flex items-start gap-2"><i data-lucide="clock"
+                                class="w-5 h-5 text-brand-400 flex-shrink-0 mt-0.5"></i>
+                            <div class="text-xs">
+                                <p>Mon - Fri: 9AM - 5PM</p>
+                                <p>Sat: 9AM - 1PM | Sun: Closed</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 text-sm">
+                <p>&copy;
+                    <script>document.write(new Date().getFullYear())</script> Scentpro Technology Solutions. All rights
+                    reserved.
+                </p>
+                <div class="flex gap-6"><a href="#" class="hover:text-white transition-colors">Privacy Policy</a><a
+                        href="#" class="hover:text-white transition-colors">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Bubble -->
+    <div x-data="{ open: false }" class="fixed bottom-6 right-6 z-50 flex flex-col items-end max-w-[calc(100vw-3rem)]">
+        <div x-show="open" x-transition.origin.bottom.right
+            class="mb-4 w-72 md:w-80 bg-white rounded-2xl shadow-2xl border overflow-hidden" x-cloak>
+            <div class="bg-brand-600 p-4 flex justify-between items-center text-white">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="font-bold">Scentpro Support</span>
+                </div>
+                <button @click="open = false" class="hover:bg-brand-700 rounded p-1">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="p-4 h-48 overflow-y-auto bg-gray-50">
+                <div class="bg-white p-3 rounded-lg shadow-sm mb-3">
+                    <p class="text-sm text-gray-700">Hello! 👋 How can we help you today?</p>
+                </div>
+            </div>
+            <div class="p-3 border-t bg-white">
+                <a href="https://wa.me/263717262717?text=Hi Scentpro, I have a question and would like some assistance."
+                    target="_blank"
+                    class="w-full flex justify-center items-center gap-2 bg-brand-600 text-white rounded-lg py-2.5 font-bold hover:bg-brand-700 transition-colors">
+                    <i data-lucide="message-square" class="w-4 h-4"></i> WhatsApp Us
+                </a>
+            </div>
+        </div>
+
+        <button @click="open = !open"
+            class="w-14 h-14 bg-brand-600 rounded-full text-white shadow-xl hover:bg-brand-700 transition-all flex items-center justify-center">
+            <i x-show="!open" data-lucide="message-circle" class="w-6 h-6"></i>
+            <i x-show="open" data-lucide="chevron-down" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 800, once: true, offset: 50 }); lucide.createIcons();</script>
+</body>
+
+</html>
